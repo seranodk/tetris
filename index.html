@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#070a12">
-<title>Tetris v1.1</title>
+<title>Tetris v1.2</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:none;-webkit-user-drag:none}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -83,7 +83,7 @@ html,body{margin:0;height:100%;background:#070a12;overflow:hidden;overscroll-beh
 <script>
 (()=>{
 "use strict";
-const VERSION="1.1", COLS=10, ROWS=22, HID=2;
+const VERSION="1.2", COLS=10, ROWS=22, HID=2;
 const COLORS={I:'#22d3ee',J:'#3b5bff',L:'#ff9f1a',O:'#ffd60a',S:'#34d058',T:'#b44cff',Z:'#ff3b4e'};
 const SHAPES={
  I:[[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],
@@ -112,7 +112,7 @@ const bctx=boardC.getContext('2d'), hctx=holdC.getContext('2d'), nctx=nextC.getC
 let grid, queue, bag, piece, holdT, canHold, score, lines, level, startLevel=1, best=0;
 let state='menu', b2b=false, combo=-1;
 let gravAcc=0, lockTimer=0, lockResets=0, lowestY=0, lastRot=false, lastKick=0;
-let softOn=false, clearRows=[], clearT=0, popup=null;
+let softOn=false,fastOn=false, clearRows=[], clearT=0, popup=null;
 let cell=28, dpr=1;
 try{best=+localStorage.getItem('tetris_best')||0}catch(e){}
 
@@ -238,7 +238,7 @@ function menu(){
   showOverlay(`<h1>TETRIS</h1><p>Rekord: <b>${best}</b></p>
    <div class="lvl"><button id="lm">−</button><span id="lv">${startLevel}<small>STARTNIVEAU</small></span><button id="lp">+</button></div>
    <button class="go" id="start">Spil</button>
-   <p style="font-size:12px;margin-top:14px">Træk på brættet for at flytte · tryk = drej<br>swipe ned = drop · swipe op = hold</p><p style="font-size:11px;opacity:.6;margin:8px 0 0">v${VERSION}</p>`);
+   <p style="font-size:12px;margin-top:14px">Træk på brættet for at flytte · tryk = drej<br>hold ▼-knappen = lynhurtigt ned · swipe op = hold</p><p style="font-size:11px;opacity:.6;margin:8px 0 0">v${VERSION}</p>`);
   const upd=()=>{$('lv').firstChild.nodeValue=startLevel};
   $('lm').onclick=()=>{startLevel=Math.max(1,startLevel-1);upd()};
   $('lp').onclick=()=>{startLevel=Math.min(15,startLevel+1);upd()};
@@ -257,12 +257,12 @@ function hud(){
 let dirs=[],dir=0,dasT=0,arrT=0;
 function pressDir(d){dirs=dirs.filter(x=>x!==d);dirs.push(d);dir=d;dasT=0;arrT=0;moveH(d)}
 function releaseDir(d){dirs=dirs.filter(x=>x!==d);dir=dirs.length?dirs[dirs.length-1]:0;dasT=0;arrT=0}
-function releaseAll(){dirs=[];dir=0;softOn=false;document.querySelectorAll('.btn.on').forEach(b=>b.classList.remove('on'))}
+function releaseAll(){dirs=[];dir=0;softOn=false;fastOn=false;document.querySelectorAll('.btn.on').forEach(b=>b.classList.remove('on'))}
 const ACT={
  left:[()=>pressDir(-1),()=>releaseDir(-1)],
  right:[()=>pressDir(1),()=>releaseDir(1)],
  down:[()=>{softOn=true},()=>{softOn=false}],
- cw:[()=>rotate(1)],ccw:[()=>rotate(-1)],drop:[()=>hardDrop()]};
+ cw:[()=>rotate(1)],ccw:[()=>rotate(-1)],drop:[()=>{fastOn=true},()=>{fastOn=false}]};
 document.querySelectorAll('.btn').forEach(b=>{
   const [dn,up]=ACT[b.dataset.a];let down=false;
   const end=e=>{if(!down)return;down=false;b.classList.remove('on');up&&up()};
@@ -330,15 +330,15 @@ function update(dt){
   if(state==='clear'){clearT+=dt;if(clearT>=CLEAR_T)finishClear();return}
   if(state!=='play'||!piece)return;
   if(dir){dasT+=dt;if(dasT>=DAS){arrT+=dt;while(arrT>=ARR){arrT-=ARR;if(!moveH(dir)){arrT=0;break}}}}
-  const iv=softOn?Math.min(interval(),0.04):interval();
+  const iv=fastOn?Math.min(interval(),0.012):softOn?Math.min(interval(),0.04):interval();
   gravAcc+=dt;let guard=30;
   while(gravAcc>=iv&&guard--){
     if(!collide(piece.m,piece.x,piece.y+1)){
-      piece.y++;gravAcc-=iv;lastRot=false;if(softOn)score+=1;
+      piece.y++;gravAcc-=iv;lastRot=false;if(softOn||fastOn)score+=1;
       if(piece.y>lowestY){lowestY=piece.y;lockResets=0;lockTimer=0}
     }else{gravAcc=0;break}}
-  if(softOn)hud0();
-  if(grounded()){lockTimer+=dt;if(lockTimer>=LOCK||(lockResets>=MAXRESET&&lockTimer>=LOCK)){lockPiece()}}
+  if(softOn||fastOn)hud0();
+  if(grounded()){lockTimer+=dt;if(lockTimer>=(fastOn?0.06:LOCK)){lockPiece()}}
   else lockTimer=0;
 }
 let lastScore=-1;function hud0(){if(score!==lastScore){lastScore=score;$('score').textContent=score}}

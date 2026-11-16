@@ -4,7 +4,7 @@ Komplet Tetris-klon til browser og mobil – optimeret til iPhone 15 (portræt, 
 
 **Spil:** https://seranodk.github.io/tetris/
 
-**Version:** 1.1 (se [CHANGELOG.md](CHANGELOG.md))
+**Version:** 1.2 (se [CHANGELOG.md](CHANGELOG.md))
 
 ## Regler (som i moderne Tetris)
 - 7-bag tilfældig brikrækkefølge
@@ -21,7 +21,8 @@ Komplet Tetris-klon til browser og mobil – optimeret til iPhone 15 (portræt, 
 | Flyt venstre/højre | ◀ ▶ (hold for auto-gentag) eller træk på brættet |
 | Drej med uret | grøn knap / tryk på højre halvdel af brættet |
 | Drej mod uret | tryk på venstre halvdel af brættet |
-| Hard drop | lilla dobbelt-pil / swipe ned |
+| Lynhurtigt ned | hold den lilla dobbelt-pil inde (brikkerne falder til bunden og låser hurtigt) |
+| Hard drop | swipe ned på brættet / `Space` |
 | Hold | tryk på HOLD-feltet / swipe op |
 | Pause | knappen under statistikken |
 
