@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.3 – 2026-11-16
+- Hold-knappen falder nu langsommere (ca. 3× langsommere end v1.2), så man kan nå at trykke flere gange og styre brikken inden den når bunden
+
 ## v1.2 – 2026-11-16
 - Den lilla knap er nu "hold for lynhurtig nedfald": mens den holdes inde falder brikkerne ekstremt hurtigt og låser næsten med det samme
 - Hard drop via swipe ned / Space
