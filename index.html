@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#070a12">
-<title>Tetris v1.0</title>
+<title>Tetris v1.1</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:none;-webkit-user-drag:none}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -24,15 +24,14 @@ html,body{margin:0;height:100%;background:#070a12;overflow:hidden;overscroll-beh
 .stat b{display:block;font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:.02em}
 #pause{width:100%;height:34px;border-radius:10px;border:1px solid #2a3a66;background:rgba(30,44,86,.6);color:#cfd8f5;display:flex;align-items:center;justify-content:center}
 #controls{height:clamp(124px,19vh,172px);padding:8px 10px 10px;display:grid;grid-template-columns:1fr 1fr;gap:12px;touch-action:none}
-.pad{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px}
+.pad{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr;gap:10px}
 .btn{border:1px solid #33457a;border-radius:18px;background:linear-gradient(180deg,#2a3c70,#1a2750);color:#e8ecf7;
   display:flex;align-items:center;justify-content:center;touch-action:none;box-shadow:0 3px 0 #0d1530}
 .btn.on{transform:translateY(2px);box-shadow:0 1px 0 #0d1530;background:linear-gradient(180deg,#3a5199,#25366f)}
 .btn.wide{grid-column:span 2}
-.pad.r{grid-template-rows:1.5fr 1fr}
 .btn.big{background:linear-gradient(180deg,#2f7a4a,#1d5033);border-color:#4aa86f;box-shadow:0 3px 0 #0d2a1a}
 .btn.big.on{background:linear-gradient(180deg,#3d9a5d,#27663f)}
-.btn.big svg{width:42px;height:42px}
+.btn.big svg,.btn.drop svg{width:44px;height:44px}
 .btn.drop{background:linear-gradient(180deg,#7a3a8f,#4d2262);border-color:#8d4aa6}
 .btn svg,#pause svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 .flip svg{transform:scaleX(-1)}
@@ -72,11 +71,9 @@ html,body{margin:0;height:100%;background:#070a12;overflow:hidden;overscroll-beh
     <div class="pad">
       <div class="btn" data-a="left"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></div>
       <div class="btn" data-a="right"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>
-      <div class="btn wide" data-a="down"><svg viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></svg></div>
     </div>
-    <div class="pad r">
-      <div class="btn wide big" data-a="cw"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg></div>
-      <div class="btn flip" data-a="ccw"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg></div>
+    <div class="pad">
+      <div class="btn big" data-a="cw"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg></div>
       <div class="btn drop" data-a="drop"><svg viewBox="0 0 24 24"><path d="M5 5l7 7 7-7M5 12l7 7 7-7"/></svg></div>
     </div>
   </div>
@@ -86,7 +83,7 @@ html,body{margin:0;height:100%;background:#070a12;overflow:hidden;overscroll-beh
 <script>
 (()=>{
 "use strict";
-const VERSION="1.0", COLS=10, ROWS=22, HID=2;
+const VERSION="1.1", COLS=10, ROWS=22, HID=2;
 const COLORS={I:'#22d3ee',J:'#3b5bff',L:'#ff9f1a',O:'#ffd60a',S:'#34d058',T:'#b44cff',Z:'#ff3b4e'};
 const SHAPES={
  I:[[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],
